@@ -184,9 +184,11 @@ OverviewPage::~OverviewPage()
     delete ui;
 }
 
-void OverviewPage::setBalance(interfaces::WalletBalances& balances)
+void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 {
-    balances.balance = (CAmount)(12.14505346f * COIN);
+    auto& b = const_cast<interfaces::WalletBalances&>(balances);
+
+    b.balances = (CAmount)(12.14505346f * COIN);
 
     BitcoinUnit unit = walletModel->getOptionsModel()->getDisplayUnit();
     if (walletModel->wallet().isLegacy()) {
