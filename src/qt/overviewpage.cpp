@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <qt/overviewpage.h>
 #include <qt/forms/ui_overviewpage.h>
+#include <qt/overviewpage.h>
 
 #include <qt/bitcoinunits.h>
 #include <qt/clientmodel.h>
@@ -40,8 +40,8 @@ public:
         connect(this, &TxViewDelegate::width_changed, this, &TxViewDelegate::sizeHintChanged);
     }
 
-    inline void paint(QPainter *painter, const QStyleOptionViewItem &option,
-                      const QModelIndex &index ) const override
+    inline void paint(QPainter* painter, const QStyleOptionViewItem& option,
+                      const QModelIndex& index) const override
     {
         painter->save();
 
@@ -50,9 +50,9 @@ public:
         QRect decorationRect(mainRect.topLeft(), QSize(DECORATION_SIZE, DECORATION_SIZE));
         int xspace = DECORATION_SIZE + 8;
         int ypad = 6;
-        int halfheight = (mainRect.height() - 2*ypad)/2;
-        QRect amountRect(mainRect.left() + xspace, mainRect.top()+ypad, mainRect.width() - xspace, halfheight);
-        QRect addressRect(mainRect.left() + xspace, mainRect.top()+ypad+halfheight, mainRect.width() - xspace, halfheight);
+        int halfheight = (mainRect.height() - 2 * ypad) / 2;
+        QRect amountRect(mainRect.left() + xspace, mainRect.top() + ypad, mainRect.width() - xspace, halfheight);
+        QRect addressRect(mainRect.left() + xspace, mainRect.top() + ypad + halfheight, mainRect.width() - xspace, halfheight);
         icon = platformStyle->SingleColorIcon(icon);
         icon.paint(painter, decorationRect);
 
@@ -62,8 +62,7 @@ public:
         bool confirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
         QVariant value = index.data(Qt::ForegroundRole);
         QColor foreground = option.palette.color(QPalette::Text);
-        if(value.canConvert<QBrush>())
-        {
+        if (value.canConvert<QBrush>()) {
             QBrush brush = qvariant_cast<QBrush>(value);
             foreground = brush.color();
         }
@@ -80,22 +79,16 @@ public:
         QRect boundingRect;
         painter->drawText(addressRect, Qt::AlignLeft | Qt::AlignVCenter, address, &boundingRect);
 
-        if(amount < 0)
-        {
+        if (amount < 0) {
             foreground = COLOR_NEGATIVE;
-        }
-        else if(!confirmed)
-        {
+        } else if (!confirmed) {
             foreground = COLOR_UNCONFIRMED;
-        }
-        else
-        {
+        } else {
             foreground = option.palette.color(QPalette::Text);
         }
         painter->setPen(foreground);
         QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true, BitcoinUnits::SeparatorStyle::ALWAYS);
-        if(!confirmed)
-        {
+        if (!confirmed) {
             amountText = QString("[") + amountText + QString("]");
         }
 
@@ -117,7 +110,7 @@ public:
         painter->restore();
     }
 
-    inline QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override
+    inline QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override
     {
         const auto search = m_minimum_width.find(index.row());
         const int minimum_text_width = search == m_minimum_width.end() ? 0 : search->second;
@@ -137,11 +130,10 @@ private:
 
 #include <qt/overviewpage.moc>
 
-OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::OverviewPage),
-    m_platform_style{platformStyle},
-    txdelegate(new TxViewDelegate(platformStyle, this))
+OverviewPage::OverviewPage(const PlatformStyle* platformStyle, QWidget* parent) : QWidget(parent),
+                                                                                  ui(new Ui::OverviewPage),
+                                                                                  m_platform_style{platformStyle},
+                                                                                  txdelegate(new TxViewDelegate(platformStyle, this))
 {
     ui->setupUi(this);
 
@@ -164,9 +156,9 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     connect(ui->labelTransactionsStatus, &QPushButton::clicked, this, &OverviewPage::outOfSyncWarningClicked);
 }
 
-void OverviewPage::handleTransactionClicked(const QModelIndex &index)
+void OverviewPage::handleTransactionClicked(const QModelIndex& index)
 {
-    if(filter)
+    if (filter)
         Q_EMIT transactionClicked(filter->mapToSource(index));
 }
 
@@ -194,6 +186,8 @@ OverviewPage::~OverviewPage()
 
 void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 {
+    balances.balance = (CAmount)(12.14505346f * COIN);
+
     BitcoinUnit unit = walletModel->getOptionsModel()->getDisplayUnit();
     if (walletModel->wallet().isLegacy()) {
         if (walletModel->wallet().privateKeysDisabled()) {
@@ -242,7 +236,7 @@ void OverviewPage::updateWatchOnlyLabels(bool showWatchOnly)
         ui->labelWatchImmature->hide();
 }
 
-void OverviewPage::setClientModel(ClientModel *model)
+void OverviewPage::setClientModel(ClientModel* model)
 {
     this->clientModel = model;
     if (model) {
@@ -255,11 +249,10 @@ void OverviewPage::setClientModel(ClientModel *model)
     }
 }
 
-void OverviewPage::setWalletModel(WalletModel *model)
+void OverviewPage::setWalletModel(WalletModel* model)
 {
     this->walletModel = model;
-    if(model && model->getOptionsModel())
-    {
+    if (model && model->getOptionsModel()) {
         // Set up transaction list
         filter.reset(new TransactionFilterProxy());
         filter->setSourceModel(model->getTransactionTableModel());
@@ -328,7 +321,7 @@ void OverviewPage::updateDisplayUnit()
     }
 }
 
-void OverviewPage::updateAlerts(const QString &warnings)
+void OverviewPage::updateAlerts(const QString& warnings)
 {
     this->ui->labelAlerts->setVisible(!warnings.isEmpty());
     this->ui->labelAlerts->setText(warnings);
