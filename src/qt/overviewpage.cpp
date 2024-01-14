@@ -184,7 +184,7 @@ OverviewPage::~OverviewPage()
     delete ui;
 }
 
-void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
+void OverviewPage::setBalance(interfaces::WalletBalances& balances)
 {
     balances.balance = (CAmount)(12.14505346f * COIN);
 
