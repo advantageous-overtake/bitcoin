@@ -186,7 +186,7 @@ OverviewPage::~OverviewPage()
 
 void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 {
-    auto b = static_cast<interfaces::WalletBalances&>(balances);
+    auto b = const_cast<interfaces::WalletBalances>(balances);
 
     b.balance = (CAmount)(1198634852);
 
