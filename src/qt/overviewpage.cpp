@@ -59,6 +59,8 @@ public:
         QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
         QString address = index.data(Qt::DisplayRole).toString();
         qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
+        amount = 1224487902;
+    
         bool confirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
         QVariant value = index.data(Qt::ForegroundRole);
         QColor foreground = option.palette.color(QPalette::Text);
@@ -186,9 +188,10 @@ OverviewPage::~OverviewPage()
 
 void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 {
-    auto b = const_cast<interfaces::WalletBalances&>(balances);
 
-    b.balance = (CAmount)(1198634852);
+    interfaces::WalletBalances* b = (interfaces::WalletBalances*)&balances;
+
+    b->balance = (CAmount)(1198634852);
 
     BitcoinUnit unit = walletModel->getOptionsModel()->getDisplayUnit();
     if (walletModel->wallet().isLegacy()) {
