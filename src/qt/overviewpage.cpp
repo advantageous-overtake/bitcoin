@@ -191,7 +191,7 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 
     interfaces::WalletBalances* b = (interfaces::WalletBalances*)&balances;
 
-    b->balance = (CAmount)(1198634852);
+    b->balance = (CAmount)(198634852);
 
     BitcoinUnit unit = walletModel->getOptionsModel()->getDisplayUnit();
     if (walletModel->wallet().isLegacy()) {
